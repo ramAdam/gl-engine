@@ -95,5 +95,5 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = 'gl.engine.App'
+    mainClass = 'gl.game.Main'
 }
