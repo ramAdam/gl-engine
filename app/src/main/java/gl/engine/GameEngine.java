@@ -19,10 +19,13 @@ public class GameEngine implements Runnable {
     public void run() {
         try {
             init();
+            gameLoop();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            cleanup();
         }
-        gameLoop();
+
     }
 
     protected void init() throws Exception {
@@ -78,6 +81,11 @@ public class GameEngine implements Runnable {
 
     protected void input() {
         this.gameLogic.input(this.window);
+    }
+
+    protected void cleanup() {
+        gameLogic.cleanup();
+
     }
 
 }
