@@ -60,7 +60,24 @@ public class Mesh {
             if (indicesBuffer != null) {
                 MemoryUtil.memFree(indicesBuffer);
             }
+             if (indicesBuffer != null) {
+                MemoryUtil.memFree(indicesBuffer);
+            }
         }
+    }
+
+    public void render() {
+        // Draw the mesh
+        glBindVertexArray(getVaoId());
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+
+        glDrawElements(GL_TRIANGLES, getVertexCount(), GL_UNSIGNED_INT, 0);
+
+        // Restore state
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+        glBindVertexArray(0);
     }
 
     public int getVaoId() {
@@ -78,6 +95,7 @@ public class Mesh {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glDeleteBuffers(posVboId);
         glDeleteBuffers(idxVboId);
+        glDeleteBuffers(colourVboId);
 
         // Delete the VAO
         glBindVertexArray(0);
