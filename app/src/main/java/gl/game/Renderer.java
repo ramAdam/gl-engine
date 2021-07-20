@@ -25,6 +25,7 @@ public class Renderer {
 
     private final String PROJ_MATRIX_NAME = "projectionMatrix";
     private final String WORLD_MAT_NAME = "worldMatrix";
+    private final String TEXTURE_SAMPLER = "texture_sampler";
 
     public Renderer() {
         this.tranformation = new Transformation();
@@ -40,8 +41,7 @@ public class Renderer {
       
         shaderProgram.createUniform(PROJ_MATRIX_NAME);
         shaderProgram.createUniform(WORLD_MAT_NAME);
-
-        window.setClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        shaderProgram.createUniform(TEXTURE_SAMPLER);
 
     }
 
@@ -60,6 +60,8 @@ public class Renderer {
         
         Matrix4f projectionMatrix = tranformation.getProjectionMatrix(Renderer.FOV, window.getWidth(), window.getWidth(), Renderer.Z_NEAR, Renderer.Z_FAR);
         shaderProgram.setUniform(PROJ_MATRIX_NAME, projectionMatrix);
+
+        shaderProgram.setUniform(TEXTURE_SAMPLER, 0);
 
         for(GameItem gameItem: gameItems){
             Matrix4f worldMatrix = tranformation.getWorldMatrix(gameItem.getPosition(), gameItem.getRotation(), gameItem.getScale());
