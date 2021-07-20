@@ -11,6 +11,7 @@ import org.joml.Matrix4f;
 import gl.engine.GameItem;
 import gl.engine.Utils;
 import gl.engine.Window;
+import gl.engine.graph.Camera;
 import gl.engine.graph.ShaderProgram;
 import gl.engine.graph.Transformation;
 
@@ -26,6 +27,7 @@ public class Renderer {
     private final String PROJ_MATRIX_NAME = "projectionMatrix";
     private final String WORLD_MAT_NAME = "worldMatrix";
     private final String TEXTURE_SAMPLER = "texture_sampler";
+    private final String MODEL_VIEW_MATRIX = "modelViewMatrix";
 
     public Renderer() {
         this.tranformation = new Transformation();
@@ -40,7 +42,7 @@ public class Renderer {
 
       
         shaderProgram.createUniform(PROJ_MATRIX_NAME);
-        shaderProgram.createUniform(WORLD_MAT_NAME);
+        shaderProgram.createUniform(MODEL_VIEW_MATRIX);
         shaderProgram.createUniform(TEXTURE_SAMPLER);
 
     }
@@ -49,7 +51,7 @@ public class Renderer {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    public void render(Window window, GameItem[] gameItems) {
+    public void render(Window window, Camera camera, GameItem[] gameItems) {
         clear();
 
         if (window.isResized()) {
@@ -61,11 +63,15 @@ public class Renderer {
         Matrix4f projectionMatrix = tranformation.getProjectionMatrix(Renderer.FOV, window.getWidth(), window.getWidth(), Renderer.Z_NEAR, Renderer.Z_FAR);
         shaderProgram.setUniform(PROJ_MATRIX_NAME, projectionMatrix);
 
+         // Update view Matrix
+        Matrix4f viewMatrix = this.tranformation.getViewMatrix(camera);
+
         shaderProgram.setUniform(TEXTURE_SAMPLER, 0);
 
         for(GameItem gameItem: gameItems){
-            Matrix4f worldMatrix = tranformation.getWorldMatrix(gameItem.getPosition(), gameItem.getRotation(), gameItem.getScale());
-            shaderProgram.setUniform(WORLD_MAT_NAME, worldMatrix);
+            // set the model view matrix for this game item
+            Matrix4f modelViewMatrix = tranformation.getModelViewMatrix(gameItem, viewMatrix);
+            shaderProgram.setUniform(MODEL_VIEW_MATRIX, modelViewMatrix);
             gameItem.getMesh().render();
         }
 
