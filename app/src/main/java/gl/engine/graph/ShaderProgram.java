@@ -57,8 +57,12 @@ public class ShaderProgram {
         FloatBuffer fb = stack.mallocFloat(16);
         value.get(fb);
         glUniformMatrix4fv(uniforms.get(uniformName), false, fb);
+        }
     }
-}
+
+    public void setUniform(String uniformName, int value) {
+        glUniform1i(uniforms.get(uniformName), value);
+    }
 
     public void createUniform(String uniformName) throws Exception {
         int uniformLocation = glGetUniformLocation(programId,

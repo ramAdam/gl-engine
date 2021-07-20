@@ -2,19 +2,15 @@ package gl.game;
 
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glViewport;
 
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL11.glDrawElements;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+
 import org.joml.Matrix4f;
 
 import gl.engine.GameItem;
 import gl.engine.Utils;
 import gl.engine.Window;
-import gl.engine.graph.Mesh;
 import gl.engine.graph.ShaderProgram;
 import gl.engine.graph.Transformation;
 
@@ -22,7 +18,6 @@ public class Renderer {
 
   
     private ShaderProgram shaderProgram;
-    private Matrix4f projectionMatrix;
     private Transformation tranformation;
     private static final float FOV = (float) Math.toRadians(60.0f);
     private static final float Z_NEAR = 0.01f;
@@ -30,6 +25,7 @@ public class Renderer {
 
     private final String PROJ_MATRIX_NAME = "projectionMatrix";
     private final String WORLD_MAT_NAME = "worldMatrix";
+    private final String TEXTURE_SAMPLER = "texture_sampler";
 
     public Renderer() {
         this.tranformation = new Transformation();
@@ -45,6 +41,7 @@ public class Renderer {
       
         shaderProgram.createUniform(PROJ_MATRIX_NAME);
         shaderProgram.createUniform(WORLD_MAT_NAME);
+        shaderProgram.createUniform(TEXTURE_SAMPLER);
 
     }
 
@@ -64,6 +61,8 @@ public class Renderer {
         Matrix4f projectionMatrix = tranformation.getProjectionMatrix(Renderer.FOV, window.getWidth(), window.getWidth(), Renderer.Z_NEAR, Renderer.Z_FAR);
         shaderProgram.setUniform(PROJ_MATRIX_NAME, projectionMatrix);
 
+        shaderProgram.setUniform(TEXTURE_SAMPLER, 0);
+
         for(GameItem gameItem: gameItems){
             Matrix4f worldMatrix = tranformation.getWorldMatrix(gameItem.getPosition(), gameItem.getRotation(), gameItem.getScale());
             shaderProgram.setUniform(WORLD_MAT_NAME, worldMatrix);
@@ -71,7 +70,6 @@ public class Renderer {
         }
 
 
-     
         shaderProgram.unbind();
 
     }

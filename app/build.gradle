@@ -4,6 +4,7 @@
  * This generated file contains a sample Java application project to get you started.
  * For more details take a look at the 'Building Java & JVM projects' chapter in the Gradle
  * User Manual available at https://docs.gradle.org/6.8.3/userguide/building_java_projects.html
+ * ./gradlew build --refresh-dependencies <--install new dependencies
  */
 
 plugins {
@@ -13,6 +14,7 @@ plugins {
 
 project.ext.lwjglVersion = "3.2.3"
 project.ext.jomlVersion = "1.10.1"
+project.ext.pngDecoderVersion = "1.0"
 project.ext.lwjglNatives = "natives-linux"
 
 repositories {
@@ -91,6 +93,7 @@ dependencies {
 	runtimeOnly "org.lwjgl:lwjgl-yoga::$lwjglNatives"
 	runtimeOnly "org.lwjgl:lwjgl-zstd::$lwjglNatives"
 	implementation "org.joml:joml:${jomlVersion}"
+	implementation group: 'org.l33tlabs.twl', name: 'pngdecoder', version: '1.0'
 }
 
 application {
