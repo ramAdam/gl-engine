@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
 
 public class ShaderProgram {
@@ -60,19 +61,22 @@ public class ShaderProgram {
         }
     }
 
+    public void setUniform(String uniformName, Vector3f value) {
+        glUniform3f(uniforms.get(uniformName), value.x, value.y, value.z);
+    }
+
     public void setUniform(String uniformName, int value) {
         glUniform1i(uniforms.get(uniformName), value);
     }
 
     public void createUniform(String uniformName) throws Exception {
-        int uniformLocation = glGetUniformLocation(programId,
-            uniformName);
+        int uniformLocation = glGetUniformLocation(programId, uniformName);
         if (uniformLocation < 0) {
-            throw new Exception("Could not find uniform:" +
-                uniformName);
+            throw new Exception("Could not find uniform:" + uniformName);
         }
         uniforms.put(uniformName, uniformLocation);
     }
+
 
     public void link() throws Exception {
         glLinkProgram(programId);
